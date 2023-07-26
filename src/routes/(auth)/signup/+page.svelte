@@ -1,17 +1,21 @@
-<script>
+<script lang="ts">
     import { createCheckbox } from '@melt-ui/svelte'
     import {Check} from 'lucide-svelte';
     import GoogleLogoSmall from '$lib/images/logos/google-logo-sm.svg'
-    const { root, input, isChecked, isIndeterminate } = createCheckbox({
+    const { root, input, isChecked } = createCheckbox({
     checked: 'indeterminate',
   });
+
+
+
 </script>
+
 
 <nav class="max-w-[90rem] mx-auto mb-20 h-14 flex items-center">
     <a href="/" class="text-blue-500 text-2xl font-semibold ">Squadcomms</a>
 </nav>
 
-<form class="border-2 max-w-2xl mx-auto p-10 rounded-lg">
+<form   class="border-2 max-w-2xl mx-auto p-10 rounded-lg" >
     <h2 class="text-center text-3xl font-semibold mb-4">Sign up to find your squad</h2>
 
     <button class="bg-blue-500 w-full py-2 text-white font-semibold rounded-full relative">
@@ -20,7 +24,7 @@
         </div>
         Continue with Google
     </button>
-
+ 
     <div class="my-6 flex items-center gap-4 text-gray-500 text-lg">
         <div class="h-0.5 flex-1 bg-gray-200 rounded"/>
         or
@@ -31,20 +35,20 @@
         <div class="flex gap-10">
             <div class="flex flex-col flex-1">
                 <label for="fname">First name</label>
-                <input name="fname" id="fname" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" />
+                <input name="fname" id="fname" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" value="Noel" />
             </div>
             <div class="flex flex-col flex-1">
                 <label for="lname">Last name</label>
-                <input name="lname" id="lname" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" />
+                <input name="lname" id="lname" type="text" placeholder="Smith" class="border-2 rounded-lg p-1 px-2" value="Vega" />
             </div>
         </div>
         <div class="flex flex-col flex-1">
             <label for="email">Email</label>
-            <input name="email" id="email" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" />
+            <input name="email" id="email" type="text" placeholder="John.Smith@example.com" class="border-2 rounded-lg p-1 px-2" />
         </div>
         <div class="flex flex-col flex-1 mb-2">
             <label for="password">Password</label>
-            <input name="password" id="password" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" />
+            <input name="password" id="password"  type="text" placeholder="Super Secret Password" class="border-2 rounded-lg p-1 px-2"  />
         </div>
 
         <div class="flex  gap-4">

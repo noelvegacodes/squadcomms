@@ -1,7 +1,11 @@
-<div class="border-8 border-blue-500 ">
-    <div class="w-96 bg-orange-500 border-2 h-full"></div>
-    <div class="w-96 bg-orange-500 border-2 h-full"></div>
-    <div class="w-96 bg-orange-500 border-2 h-full"></div>
-    <div class="w-96 bg-orange-500 border-2 h-full"></div>
-    <div class="w-96 bg-orange-500 border-2 h-full"></div>
+<script lang="ts">
+    import {helloWorld} from '$lib/db'
+
+    export let data;
+</script>
+
+<div>
+    Hello Harry
+    <p> Now {data.now}</p>
+    <p> Latency: {data.latency}</p>
 </div>

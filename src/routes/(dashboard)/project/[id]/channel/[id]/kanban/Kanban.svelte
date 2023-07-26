@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher} from 'svelte'
     import { flip } from 'svelte/animate';
 	import { MoreHorizontal, Plus, PlusCircle } from 'lucide-svelte';
     import {dndzone} from "svelte-dnd-action";
@@ -6,6 +7,10 @@
 	import NewTaskButton from './NewTaskButton.svelte';
 	import type { List } from '$lib/types';
     const flipDurationMs = 200;
+
+    const dispatch = createEventDispatcher();
+
+    const openTaskDrawer = false;
 
 	export let lists: List[];
 
@@ -28,10 +33,12 @@
         console.log('finalize', lists)
         lists = [...lists];
     }
+
+
 </script>
 
 
-<div class="flex h-full overflow-x-auto gap-6 p-4">
+<div class="flex h-full overflow-x-auto gap-6 p-4  relative">
 
     <div class="flex gap-6  h-full " 
         use:dndzone="{{items: lists, type: 'columns', flipDurationMs}}" 
@@ -39,7 +46,7 @@
         on:finalize={handleDndFinalizeColumns}
     > 
         {#each lists as list(list.id)}
-            <div class="h-full shrink-0 w-96 bg-white  border border-transparent hover:border-gray-300 flex flex-col p-4 rounded transition-all duration-200 "
+            <div class="h-full shrink-0 w-80 bg-white  border border-transparent hover:border-gray-300 flex flex-col p-4 rounded transition-all duration-200 "
             animate:flip="{{duration: flipDurationMs}}"
             >
                 <h2 class=" font-semibold text-xl mb-2">{list.name}</h2>
@@ -55,10 +62,11 @@
                     on:finalize={(e) => handleDndFinalizeCards(list.id, e)}
                 >
                     {#each list.items as todo(todo.id)}
-                        <button class="bg-white"
+                        <button class="bg-white hover:bg-gray-100 transition-colors duration-300"
                         animate:flip="{{duration: flipDurationMs}}"
+                        on:click={() => dispatch("taskClick", {todoId: todo.id, listId: todo.listId})}
                         >
-                            <article class="border-2 rounded-lg p-4">
+                            <article class="border-2 rounded-lg p-4" >
                                 <header class="mb-2 flex justify-between">
                                     <h3 class="font-semibold">{todo.name}</h3>
                                     <MoreHorizontal size={20} class="text-gray-400" />
@@ -99,14 +107,16 @@
     
     </div>
     <NewListButton>
-        <div class="h-full shrink-0 w-96 border bg-gray-100 text-gray-500  grid place-content-center gap-6 border-gray-300 p-4 rounded transition-all duration-200 "
+        <div class="h-full shrink-0 w-80 border bg-gray-100 text-gray-500  grid place-content-center gap-6 border-gray-300 p-4 rounded transition-all duration-200 "
         >
-                    <div class="flex gap-2 items-center text-2xl">
-            List <Plus size={24} />
-        </div> 
-    </div>
+            <div class="flex gap-2 items-center text-2xl">
+                List <Plus size={24} />
+            </div> 
+        </div>
     </NewListButton>
 </div>
+
+
 
 <style lang="postcss">
     	.avatars div:not(:first-child) {

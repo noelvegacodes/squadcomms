@@ -7,6 +7,9 @@ import { preprocessMeltUI } from '@melt-ui/pp';
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
+	vitePlugin: {
+		inspector: true
+	},
 	preprocess: [sequence([vitePreprocess(), preprocessMeltUI]), vitePreprocess({})],
 
 	kit: {

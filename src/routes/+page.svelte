@@ -54,7 +54,7 @@
 	>
 		{#if navDrawerIsOpen && nav === 'Find Talent'}
 		<div class="absolute bg-white w-full  z-[1] border-y shadow-lg rounded-b-xl pt-8 pb-16">
-			<div class="max-w-7xl mx-auto flex ">
+			<div class="max-w-7xl mx-auto flex gap-10">
 
 				<ul class="flex flex-col w-[300px] gap-2">
 
@@ -157,7 +157,7 @@
 				</p>
 				<div>
 					<a href="/get-started" class="bg-blue-500 text-white text-xl font-semibold px-6 py-2 rounded border border-blue-500 mr-2">Get started</a>
-					<a href="/" class=" text-xl font-semibold px-6 py-2 rounded border-2 border-black">Learn More</a>
+					<a href="/project/demo" class=" text-xl font-semibold px-6 py-2 rounded border-2 border-black">Demo</a>
 				</div>
 			</div>	
 	
@@ -177,8 +177,11 @@
 			</div>
 		</div>
 
-		<div class="w-1/2 relative avatars">
-			<div class="h-28 w-28 rounded-full overflow-clip">
+		<div class="w-1/2 relative avatars h-full bg-blue-500">
+			<div class="h-96 w-full grid place-content-center bg-red-500 font-bold text-2xl">
+				Dope Image of product here
+			</div>
+			<!-- <div class="h-28 w-28 rounded-full overflow-clip">
 				<img src={Amy} alt="Microsoft Logo" class="w-full h-full "/>
 			</div>
 			<div class="h-28 w-28 rounded-full overflow-clip">
@@ -189,14 +192,12 @@
 			</div>
 			<div class="h-28 w-28 rounded-full overflow-clip">
 				<img src={Annie} alt="Microsoft Logo" class="w-full h-full "/>
-			</div>
+			</div> -->
 		</div>
 
 	</section>
 </div>
 
 <style lang="postcss">
-	.avatars img {
-		aspect-ratio: 1 / 1;
-	}
+
 </style>

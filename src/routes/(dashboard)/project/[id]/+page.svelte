@@ -84,7 +84,7 @@
                     </li>
                     <li class="flex items-center gap-4">
                         <Square size={20} class="rotate-45 text-teal-500 " />
-                        <p>Cloude Storage</p>
+                        <p>Cloud Storage</p>
                     </li>
                     <li class="flex items-center gap-4">
                         <Square size={20} class="rotate-45 text-teal-500 " />

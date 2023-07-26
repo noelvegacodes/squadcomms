@@ -1,32 +1,15 @@
-<script lang="ts">
-
-
-	import { Antenna, ChevronRight, ListTodo, Plus } from 'lucide-svelte';
+<!-- <script lang="ts">
+	import { Antenna, ChevronRight, Home, ListTodo, Plus, Store } from 'lucide-svelte';
 	import DropdownTrigger from '$lib/components/DropdownTrigger.svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import DropdownContent from '$lib/components/DropdownContent.svelte';
 
 </script>
 
-<div class="app-container w-full h-screen overflow-hidden">
-	<header class="flex justify-between items-center">
-		<p class="font-bold text-2xl text-blue-600">Squadcomms</p>
+<div class="app-container w-full h-full overflow-hidden">
 
-		<div class="h-6 w-6 bg-pink-700 rounded-full grid place-content-center text-white text-xs">
-			NV
-		</div>
-	</header>
 		
-	<!-- <section class="projects">
-		<a href="/" class="w-10 h-10 bg-gray-200 rounded-lg grid place-content-center">
-			<svg class="fill-black h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-				><title>home</title><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg
-			>
-		</a>
-		<button class="w-10 h-10 rounded-lg grid place-content-center border border-black">
-			<Plus size={32} />
-		</button>
-	</section> -->
+
 
 	<section class="side-nav">
 		<div class="select w-full h-14 border-b-2">
@@ -36,8 +19,7 @@
 				Project Name
 			</button>
 		</div>
-		<!-- <a href="/" class="label"> Check in </a> -->
-		<!-- <a href="/" class="label"> Activity </a> -->
+
 		<Dropdown let:open class="sidenav-dd">
 			<DropdownTrigger>
 				Channels
@@ -50,7 +32,7 @@
 
 			<DropdownContent>
 				{#each ['Product Design', 'Web Development', 'Marketing'] as link}
-					<a href="/project/90210/channel/{link}/comms"> <Antenna size={16} /> {link}</a>
+					<a href="/projects/90210/channel/{link}/comms"> <Antenna size={16} /> {link}</a>
 				{/each}
 			</DropdownContent>
 		</Dropdown>
@@ -102,8 +84,7 @@
 
 	.app-container {
 		display: grid;
-		grid-template-columns: 250px 1fr;
-		grid-template-rows:  50px auto;
+		grid-template-columns:  250px 1fr;
 	}
 	header {
 		@apply border-b-2;
@@ -117,7 +98,6 @@
 
 	.side-nav {
 		width: 250px;
-		/* padding: 10px; */
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
@@ -148,4 +128,5 @@
 	.label {
 		@apply flex gap-4 text-sm items-center w-full font-semibold text-black text-left hover:bg-gray-200 p-2 pl-6;
 	}
-</style>
+</style> -->
+<slot />

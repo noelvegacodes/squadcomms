@@ -5,8 +5,8 @@
 	$: route = $page.route.id?.split('/').slice(-1)[0];
 </script>
 
-<div class="thing h-full overflow-hidden">
-	<header class="border-b-2 h-14 flex items-center gap-12 px-4">
+<div class="thing h-full overflow-hidden relative">
+	<header class="border-b-2 h-14 flex items-center gap-12 px-8">
 		<div class="flex gap-2 items-center">
 			<Antenna size={20} />
 			<p class="font-semibold text-xl">

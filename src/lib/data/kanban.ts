@@ -17,7 +17,7 @@ export const addTask = ({ listId, name }: { listId: string; name: string }) => {
 				return list;
 			}
 
-			list.items.push({ id, name, description: '', notification: 0 });
+			list.items.push({ id, listId, name, description: '', notification: 0 });
 			return list;
 		});
 	});
