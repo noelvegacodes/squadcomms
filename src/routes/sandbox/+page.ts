@@ -1,7 +1,7 @@
-import type { Config } from '@sveltejs/adapter-vercel';
+// import type { Config } from '@sveltejs/adapter-vercel';
 
-export const config: Config = {
-	runtime: 'edge',
-	regions: ['iad1'],
-	split: true
-};
+// export const config: Config = {
+// 	runtime: 'edge',
+// 	regions: ['iad1'],
+// 	split: true
+// };
