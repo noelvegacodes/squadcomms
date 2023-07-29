@@ -1,16 +1,14 @@
 // src/app.d.ts
 
-import { SupabaseClient, Session } from '@supabase/supabase-js';
+import type { AccountType } from '$lib/server/schema';
+import { Session } from '$lib/types';
 
 declare global {
 	namespace App {
 		interface Locals {
-			supabase: SupabaseClient;
-			getSession(): Promise<Session | null>;
+			session: Session;
 		}
-		interface PageData {
-			session: Session | null;
-		}
+		interface PageData {}
 		// interface Error {}
 		// interface Platform {}
 	}

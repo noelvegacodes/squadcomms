@@ -1,54 +1,62 @@
 <script lang="ts">
     import { createCheckbox } from '@melt-ui/svelte'
-    import {Check} from 'lucide-svelte';
-    import GoogleLogoSmall from '$lib/images/logos/google-logo-sm.svg'
-    const { root, input, isChecked } = createCheckbox({
-    checked: 'indeterminate',
-  });
+    import {AtSign, Check} from 'lucide-svelte';
+    const { root, input, isChecked } = createCheckbox({ checked: 'indeterminate' });
+    import { superForm } from 'sveltekit-superforms/client';
+	import { goto } from '$app/navigation';
+	import { isEmpty } from '$lib/utils.js';
 
+    export let data;
 
-
+    const { form: signupForm, errors, constraints, enhance, message } = superForm(data.signupForm, {
+        onUpdated({form}) {
+            if (form.valid) {
+                console.log("redirect")
+                goto('/protected')
+            }
+        }
+    })
 </script>
 
-
 <nav class="max-w-[90rem] mx-auto mb-20 h-14 flex items-center">
-    <a href="/" class="text-blue-500 text-2xl font-semibold ">Squadcomms</a>
+    <a href="/" class=" text-2xl font-semibold ">Skunkworks</a>
 </nav>
 
-<form   class="border-2 max-w-2xl mx-auto p-10 rounded-lg" >
-    <h2 class="text-center text-3xl font-semibold mb-4">Sign up to find your squad</h2>
-
-    <button class="bg-blue-500 w-full py-2 text-white font-semibold rounded-full relative">
-        <div class="bg-white h-8 w-8 p-2 rounded-full absolute top-1 left-1">
-            <img src={GoogleLogoSmall} alt="Google logo letter" />
-        </div>
-        Continue with Google
-    </button>
- 
-    <div class="my-6 flex items-center gap-4 text-gray-500 text-lg">
-        <div class="h-0.5 flex-1 bg-gray-200 rounded"/>
-        or
-        <div class="h-0.5 flex-1 bg-gray-200 rounded"/>
-    </div>
+<form method="POST" use:enhance  class="border-2 max-w-2xl mx-auto p-10 rounded-lg" >
+    {#if !isEmpty($errors)}<p class="text-red-500">Invalid form input</p>{/if}
+    {#if $message}<p class="text-red-500">{$message}</p>{/if}
 
     <div class="flex flex-col gap-4 ">
+        <!-- <div class="flex gap-10">
+            <div class="flex flex-col flex-1">
+                <label for="firstName">First name</label>
+                <input name="firstName" id="firstName" type="text" placeholder="Rick" class="border-2 rounded-lg  p-1 px-2" bind:value={$signupForm.firstName} {...$constraints.firstName} />
+            </div>
+            <div class="flex flex-col flex-1">
+                <label for="lastName">Last name</label>
+                <input name="lastName" id="lastName" type="text" placeholder="Astley" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.lastName} {...$constraints.lastName} />
+            </div>
+        </div> -->
         <div class="flex gap-10">
             <div class="flex flex-col flex-1">
-                <label for="fname">First name</label>
-                <input name="fname" id="fname" type="text" placeholder="John" class="border-2 rounded-lg p-1 px-2" value="Noel" />
+                <label for="email">Email</label>
+                <input name="email" id="email" type="text" placeholder="Rick.Astley@example.com" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.email} {...$constraints.email} />
             </div>
             <div class="flex flex-col flex-1">
-                <label for="lname">Last name</label>
-                <input name="lname" id="lname" type="text" placeholder="Smith" class="border-2 rounded-lg p-1 px-2" value="Vega" />
+                <label for="handle">Handle</label>
+                <div class=" flex items-center">
+                    <div class="h-full border-2 border-r-0 rounded-l-lg px-1 items-center flex">
+                        <AtSign size={18} class="text-gray-400" />
+                    </div>
+                    <input name="handle" id="handle" type="text" placeholder="NvrGonnaGiveYouUp" class="border-2 rounded-r-lg p-1 px-2" bind:value={$signupForm.handle} {...$constraints.handle} />
+                </div>
             </div>
+        
         </div>
-        <div class="flex flex-col flex-1">
-            <label for="email">Email</label>
-            <input name="email" id="email" type="text" placeholder="John.Smith@example.com" class="border-2 rounded-lg p-1 px-2" />
-        </div>
+
         <div class="flex flex-col flex-1 mb-2">
             <label for="password">Password</label>
-            <input name="password" id="password"  type="text" placeholder="Super Secret Password" class="border-2 rounded-lg p-1 px-2"  />
+            <input name="password" id="password"  type="text" placeholder="*********" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.password} {...$constraints.password} />
         </div>
 
         <div class="flex  gap-4">
@@ -66,7 +74,7 @@
             <input  {...$input} use:input />
             </button>
             <label class="text-sm inline-block -mt-1 text-black" for="checkbox">
-            Yes, I understand and agree to the Upwork Terms of Service , including the User Agreement and Privacy Policy .
+            Yes, I understand and agree to the Terms of Service , including the User Agreement and Privacy Policy .
             </label>
         </div>
 
@@ -75,10 +83,11 @@
         </button>
 
         <p class="text-center">Already have an account?
-            <a href="/" class="text-blue-500 underline">Log In</a>
+            <a href="/login" class="text-blue-500 underline">Log In</a>
         </p>
     </div>
 </form>
+<!-- <SuperDebug data={$signupForm} /> -->
 
 
 <style lang="postcss">
