@@ -30,6 +30,6 @@ export async function createSession(account: AccountWithoutPassword, cookies: Co
 			headers: { 'Content-Type': 'application/json' }
 		});
 	} catch {
-		throw new Error(`server error: unable to create session cleanup msg: ${VERCEL_URL}`);
+		throw new Error(`server error: unable to create session cleanup msg`);
 	}
 }
