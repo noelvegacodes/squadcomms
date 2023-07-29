@@ -24,7 +24,7 @@ export async function createSession(account: AccountWithoutPassword, cookies: Co
 			body: { sid },
 			// PRIVATE_DEV_URL is an ngrok endpoint
 			// TODO: Figure out how to get access to VERCEL_URL system env variable
-			url: VERCEL_URL + '/api/chron',
+			url: 'https://' + VERCEL_URL + '/api/chron',
 			retries: 3,
 			delay: 30,
 			headers: { 'Content-Type': 'application/json' }
