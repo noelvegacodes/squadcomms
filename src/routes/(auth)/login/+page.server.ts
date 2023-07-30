@@ -1,6 +1,8 @@
 import { z } from 'zod';
 // import { authenticateAccount } from '$lib/db.js';
 import { message, superValidate } from 'sveltekit-superforms/server';
+import { authenticateAccount } from '$lib/server/db';
+import { createSession } from '$lib/server/utils';
 // import { createSession } from '$lib/utils';
 
 const loginSchema = z.object({
@@ -23,12 +25,12 @@ export const actions = {
 
 		const { email, password } = loginForm.data;
 
-		// const account = await authenticateAccount(email, password);
+		const account = await authenticateAccount(email, password);
 
-		// if (!account) {
-		// 	return message(loginForm, 'Invalid email or password', { status: 404 });
-		// }
-		// await createSession(account, cookies);
+		if (!account) {
+			return message(loginForm, 'Invalid email or password', { status: 404 });
+		}
+		await createSession(account, cookies);
 		return { loginForm };
 	}
 };

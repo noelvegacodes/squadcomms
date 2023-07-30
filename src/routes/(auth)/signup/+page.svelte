@@ -5,8 +5,10 @@
     import { superForm } from 'sveltekit-superforms/client';
 	import { goto } from '$app/navigation';
 	import { isEmpty } from '$lib/utils.js';
+	import { onMount } from 'svelte';
 
     export let data;
+
 
     const { form: signupForm, errors, constraints, enhance, message } = superForm(data.signupForm, {
         onUpdated({form}) {
@@ -18,11 +20,7 @@
     })
 </script>
 
-<nav class="max-w-[90rem] mx-auto mb-20 h-14 flex items-center">
-    <a href="/" class=" text-2xl font-semibold ">Skunkworks</a>
-</nav>
-
-<form method="POST" use:enhance  class="border-2 max-w-2xl mx-auto p-10 rounded-lg" >
+<form method="POST" use:enhance  class="border-2 max-w-2xl mx-auto p-10 rounded-lg mt-20" >
     {#if !isEmpty($errors)}<p class="text-red-500">Invalid form input</p>{/if}
     {#if $message}<p class="text-red-500">{$message}</p>{/if}
 
@@ -41,6 +39,9 @@
             <div class="flex flex-col flex-1">
                 <label for="email">Email</label>
                 <input name="email" id="email" type="text" placeholder="Rick.Astley@example.com" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.email} {...$constraints.email} />
+            {#if $errors.email}
+                <p class="text-red-500">{$errors.email}</p>
+            {/if}
             </div>
             <div class="flex flex-col flex-1">
                 <label for="handle">Handle</label>
@@ -50,15 +51,21 @@
                     </div>
                     <input name="handle" id="handle" type="text" placeholder="NvrGonnaGiveYouUp" class="border-2 rounded-r-lg p-1 px-2" bind:value={$signupForm.handle} {...$constraints.handle} />
                 </div>
+            {#if $errors.handle}
+                <p class="text-red-500">{$errors.handle}</p>
+            {/if}
             </div>
         
         </div>
 
         <div class="flex flex-col flex-1 mb-2">
+            {#if $errors.password}
+                <p class="text-red-500">{$errors.password}</p>
+            {/if}
             <label for="password">Password</label>
-            <input name="password" id="password"  type="text" placeholder="*********" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.password} {...$constraints.password} />
+            <input name="password" id="password"  type="password" placeholder="*********" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.password} {...$constraints.password} />
         </div>
-
+<!-- 
         <div class="flex  gap-4">
             <button
             {...$root}
@@ -76,7 +83,7 @@
             <label class="text-sm inline-block -mt-1 text-black" for="checkbox">
             Yes, I understand and agree to the Terms of Service , including the User Agreement and Privacy Policy .
             </label>
-        </div>
+        </div> -->
 
         <button class="bg-green-600 w-full py-2 text-white font-semibold rounded-full">
             Create my account

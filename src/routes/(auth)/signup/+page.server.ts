@@ -4,8 +4,8 @@ import { createAccount, findAccount } from '$lib/server/db.js';
 import { createSession } from '$lib/server/utils';
 const signupSchema = z.object({
 	email: z.string().email().trim(),
-	handle: z.string().trim(),
-	password: z.string().trim()
+	handle: z.string().trim().min(4),
+	password: z.string().trim().min(6, { message: 'password must be more than 6 characters' })
 });
 
 // import { createSession } from '$lib/utils.js';
