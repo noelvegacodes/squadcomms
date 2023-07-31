@@ -1,4 +1,3 @@
-import type { AccountSession } from '$lib/types';
 import type { Cookies } from '@sveltejs/kit';
 import { redis } from '../upstash';
 
@@ -50,7 +49,6 @@ async function get<T>(key: string, cookies: Cookies) {
 
 async function destroy(key: string, cookies: Cookies) {
 	const sid = cookies.get(key);
-	console.log('destroying', key, sid);
 	if (sid) {
 		cookies.delete(key, { path: '/', secure: true, httpOnly: true, sameSite: true });
 		await redis.del(sid);

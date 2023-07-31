@@ -19,7 +19,7 @@ export const accountSession: Handle = async ({ event, resolve }) => {
 export const passwordResetSession: Handle = async ({ event, resolve }) => {
 	if (
 		event.url.pathname.startsWith('/password-reset/') ||
-		event.url.pathname.startsWith('/forget-password')
+		event.url.pathname.startsWith('/password-forget')
 	) {
 		console.log('HOOK | Forget Password Session:', new Date());
 		const session = await passwordReset.session.get(event.cookies);

@@ -4,7 +4,7 @@ import { db } from '../db';
 import { eq, or } from 'drizzle-orm';
 import type { Cookies } from '@sveltejs/kit';
 import type { AccountWithoutPassword } from '$lib/types';
-import { session } from './utils';
+import { session } from '.';
 
 const accountSessionKey = 'acc_session_id';
 const passwordResetSessionKey = 'pr_session_id';
@@ -19,6 +19,8 @@ export const account = {
 		destory: destroyAccountSession
 	}
 };
+
+account.create;
 
 export const passwordReset = {
 	session: {
