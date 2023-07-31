@@ -1,11 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 
 export const load = ({ locals }) => {
-	const { session } = locals;
+	const { accountSession } = locals;
 
-	if (!session) {
+	if (!accountSession) {
 		throw redirect(302, '/signup');
 	}
 
-	return { session };
+	return { accountSession };
 };

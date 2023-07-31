@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
 	import {  invalidateAll } from '$app/navigation';
-    import { page } from '$app/stores'
     import '../app.postcss';
 	import './styles.css';
 
     export let data;
 
-    $: console.log($page)
 </script>
 
 <nav class="flex justify-between p-4 border-b">
     <a href="/">Build Story</a>
     <ul class="flex gap-6">
-        {#if data.session}
+        {#if data.accountSession}
             <form method="POST" use:enhance={() => {
                 return async ({result}) => {
                     invalidateAll();

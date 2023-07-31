@@ -16,7 +16,6 @@ export type List = {
 
 export type AccountWithoutPassword = Omit<AccountType, 'hashedPassword'>;
 
-export type Session = {
-	account: AccountWithoutPassword;
-	expireAt: number;
-};
+export interface AccountSession extends AccountWithoutPassword {
+	sessionExpiry: number;
+}

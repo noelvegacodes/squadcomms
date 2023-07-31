@@ -3,10 +3,8 @@
     import {AtSign, Check} from 'lucide-svelte';
     const { root, input, isChecked } = createCheckbox({ checked: 'indeterminate' });
     import { superForm } from 'sveltekit-superforms/client';
-	import { goto } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { isEmpty } from '$lib/utils.js';
-	import { onMount } from 'svelte';
-
     export let data;
 
 
@@ -14,7 +12,7 @@
         onUpdated({form}) {
             if (form.valid) {
                 console.log("redirect")
-                goto('/protected')
+                invalidateAll()
             }
         }
     })
@@ -25,16 +23,6 @@
     {#if $message}<p class="text-red-500">{$message}</p>{/if}
 
     <div class="flex flex-col gap-4 ">
-        <!-- <div class="flex gap-10">
-            <div class="flex flex-col flex-1">
-                <label for="firstName">First name</label>
-                <input name="firstName" id="firstName" type="text" placeholder="Rick" class="border-2 rounded-lg  p-1 px-2" bind:value={$signupForm.firstName} {...$constraints.firstName} />
-            </div>
-            <div class="flex flex-col flex-1">
-                <label for="lastName">Last name</label>
-                <input name="lastName" id="lastName" type="text" placeholder="Astley" class="border-2 rounded-lg p-1 px-2" bind:value={$signupForm.lastName} {...$constraints.lastName} />
-            </div>
-        </div> -->
         <div class="flex gap-10">
             <div class="flex flex-col flex-1">
                 <label for="email">Email</label>

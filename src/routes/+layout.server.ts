@@ -1,6 +1,5 @@
 export const load = ({ locals }) => {
-	const { session } = locals;
-	console.log('layout load: ', session);
+	const { accountSession } = locals;
 
-	return { session };
+	return { accountSession };
 };

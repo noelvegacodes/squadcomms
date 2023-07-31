@@ -1,12 +1,17 @@
 // src/app.d.ts
 
 import type { AccountType } from '$lib/server/schema';
-import { Session } from '$lib/types';
+import { AccountSession } from '$lib/types';
 
 declare global {
 	namespace App {
 		interface Locals {
-			session: Session;
+			accountSession: AccountSession;
+			passwordResetSession: {
+				data: { accountId: number };
+			} & {
+				sessionExpiry: number;
+			};
 		}
 		interface PageData {}
 		// interface Error {}

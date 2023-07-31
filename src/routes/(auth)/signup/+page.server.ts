@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { message, superValidate } from 'sveltekit-superforms/server';
-import { createAccount, findAccount } from '$lib/server/db.js';
-import { createSession } from '$lib/server/utils';
+import { account } from '$lib/server/session/account';
+import { redirect } from '@sveltejs/kit';
 const signupSchema = z.object({
 	email: z.string().email().trim(),
 	handle: z.string().trim().min(4),
@@ -10,7 +10,11 @@ const signupSchema = z.object({
 
 // import { createSession } from '$lib/utils.js';
 
-export const load = async () => {
+export const load = async ({ locals }) => {
+	const { accountSession } = locals;
+	if (accountSession) {
+		throw redirect(302, '/protected');
+	}
 	const signupForm = await superValidate(signupSchema);
 	return { signupForm };
 };
@@ -24,14 +28,8 @@ export const actions = {
 		}
 
 		try {
-			const existingAccount = await findAccount(signupForm.data.email, signupForm.data.handle);
-
-			if (existingAccount) {
-				return message(signupForm, 'Email or handle taken', { status: 400 });
-			}
-
-			const newAccount = await createAccount(signupForm.data);
-			await createSession(newAccount, cookies);
+			const newAccount = await account.create(signupForm.data);
+			await account.session.create(newAccount, cookies);
 			return { signupForm };
 		} catch (err: any) {
 			return message(signupForm, err.message, { status: 400 });

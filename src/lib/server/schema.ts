@@ -7,8 +7,8 @@ export const AccountsTable = pgTable('accounts', {
 	handle: varchar('handle', { length: 50 }).notNull().unique(),
 	email: varchar('email', { length: 100 }).notNull().unique(),
 	hashedPassword: varchar('hashed_password', { length: 72 }).notNull(),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+	createdAt: timestamp('created_at').notNull().defaultNow(),
+	updatedAt: timestamp('updated_at').notNull().defaultNow()
 });
 
 export const UsersTable = pgTable('users', {

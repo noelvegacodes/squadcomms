@@ -1,26 +1,35 @@
-import type { Session } from '$lib/types';
-import { redis } from '$lib/server/upstash';
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
+import { account, passwordReset } from '$lib/server/session/account';
 
-export const handle: Handle = async ({ event, resolve }) => {
-	console.log('HOOK: ', new Date());
-	const sid = event.cookies.get('sid');
-	if (!sid) {
-		console.log('no cookie session found');
-		return await resolve(event);
-	}
+export const accountSession: Handle = async ({ event, resolve }) => {
+	console.log('HOOK | Account Session:', new Date());
 
-	const start = new Date();
-	const session = await redis.hgetall<Session>(sid);
-	const end = new Date();
-	// @ts-ignore
-	const latency = end - start;
-	console.log(console.log('latency: ', latency));
+	const session = await account.session.get(event.cookies);
+	// const session = null;
+
 	if (!session) {
-		console.log('could not find session in redis');
 		return await resolve(event);
 	}
 
-	event.locals.session = session;
+	event.locals.accountSession = session;
 	return await resolve(event);
 };
+
+export const passwordResetSession: Handle = async ({ event, resolve }) => {
+	if (
+		event.url.pathname.startsWith('/password-reset/') ||
+		event.url.pathname.startsWith('/forget-password')
+	) {
+		console.log('HOOK | Forget Password Session:', new Date());
+		const session = await passwordReset.session.get(event.cookies);
+		if (!session) {
+			return await resolve(event);
+		}
+
+		event.locals.passwordResetSession = session;
+	}
+	return await resolve(event);
+};
+
+export const handle = sequence(accountSession, passwordResetSession);
