@@ -29,6 +29,7 @@ export const actions = {
 
 		try {
 			const newAccount = await account.create(signupForm.data);
+
 			await account.session.create(newAccount, cookies);
 			return { signupForm };
 		} catch (err: any) {

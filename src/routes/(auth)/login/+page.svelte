@@ -40,7 +40,7 @@
         </button>
 
         <div>
-            <p class="text-sm">Forget your password? <a href="/forget-password" class="text-blue-500 hover:underline"> Reset password</a></p>
+            <p class="text-sm">Forget your password? <a href="/password-forget" class="text-blue-500 hover:underline"> Reset password</a></p>
         </div>
     </div>
 </form>
