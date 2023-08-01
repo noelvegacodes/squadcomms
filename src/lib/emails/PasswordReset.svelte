@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {VERCEL_URL} from '$env/static/private'
     import { Button, Heading, Hr, Html, Preview, Section, Text } from 'svelte-email';
 
     export let passwordSessionId: string;
@@ -12,5 +13,5 @@
         <Text>Click the link below to begin resetting your password.</Text>
     </Section>
     <Hr />
-    <Button href="http://www.localhost:5173/password-reset/{passwordSessionId}">Reset Password</Button>
+    <Button href={`https://${VERCEL_URL}/password-reset/${passwordSessionId}`}>Reset Password</Button>
 </Html>
