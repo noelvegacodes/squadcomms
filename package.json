@@ -13,7 +13,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"migrations": "npx drizzle-kit generate:pg"
+		"migrations": "npx drizzle-kit generate:mysql",
+		"db-push": "npx drizzle-kit push:mysql"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
@@ -47,8 +48,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@clerk/clerk-sdk-node": "^4.12.2",
+		"@lucia-auth/adapter-mysql": "^2.0.0",
 		"@melt-ui/svelte": "^0.22.0",
 		"@neondatabase/serverless": "^0.5.6",
+		"@planetscale/database": "^1.10.0",
 		"@supabase/auth-helpers-sveltekit": "^0.9.4",
 		"@supabase/supabase-js": "^2.29.0",
 		"@sveltejs/adapter-vercel": "^3.0.2",
@@ -57,6 +61,8 @@
 		"bcrypt": "^5.1.0",
 		"dotenv": "^16.3.1",
 		"drizzle-orm": "^0.27.2",
+		"lucia": "^2.0.0",
+		"lucia-auth": "^1.8.0",
 		"lucide-svelte": "^0.262.0",
 		"resend": "^0.17.2",
 		"svelte-autoresize-textarea": "^0.0.6",

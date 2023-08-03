@@ -1,4 +1,4 @@
-import type { AccountType } from './server/schema';
+import type { AccountType } from './server/db/schema';
 
 export type Task = {
 	id: string;
@@ -16,6 +16,7 @@ export type List = {
 
 export type AccountWithoutPassword = Omit<AccountType, 'hashedPassword'>;
 
-export interface AccountSession extends AccountWithoutPassword {
-	sessionExpiry: number;
+export interface Session {
+	data: Record<number | string, any>;
+	expiry: number;
 }

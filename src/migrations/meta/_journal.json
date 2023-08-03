@@ -1,13 +1,13 @@
 {
-  "version": "5",
-  "dialect": "pg",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "5",
-      "when": 1690599923438,
-      "tag": "0000_mute_wolverine",
-      "breakpoints": true
-    }
-  ]
+	"version": "5",
+	"dialect": "pg",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "5",
+			"when": 1690599923438,
+			"tag": "0000_mute_wolverine",
+			"breakpoints": true
+		}
+	]
 }

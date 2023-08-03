@@ -1,6 +1,5 @@
 <script>
-	import RickRoll from "$lib/images/rickroll.gif"
-
+	import RickRoll from '$lib/images/rickroll.gif';
 </script>
 
 <div class="flex justify-center my-20">
@@ -9,5 +8,4 @@
 
 		<img src={RickRoll} alt="rick rolled" class="h-full" />
 	</div>
-
 </div>
