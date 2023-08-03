@@ -32,17 +32,6 @@ export const auth = lucia({
 			name: data.name
 		};
 	}
-
-	// getSessionAttributes: (databaseSession) => {
-	// 	return {
-	// 		email: databaseSession.email,
-	// 		handle: databaseSession.handle,
-	// 		name: databaseSession.name
-	// 	};
-	// }
-	// getSessionAttributes: (data) => {
-	// 	return { email: data.email, handle: data.handle, name: data.name };
-	// }
 });
 
 export type Auth = typeof auth;
