@@ -7,7 +7,7 @@
 <div class="wrapper">
     <nav>
         <a href="/home" class="logo w-full">
-            <BookOpenCheck size={24} class="text-amber-500 " />
+            <BookOpenCheck size={24} class="text-amber-500  " />
             <span>Buildstory</span>
         </a>
         <ul class="">
