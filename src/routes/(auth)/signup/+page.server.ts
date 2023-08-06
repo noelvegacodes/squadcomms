@@ -1,89 +1,95 @@
-import { z } from 'zod';
-import { message, superValidate } from 'sveltekit-superforms/server';
-import { redirect } from '@sveltejs/kit';
+// routes/signup/+page.server.ts
 import { auth } from '$lib/server/lucia';
+import { fail, redirect } from '@sveltejs/kit';
+import { generateEmailVerificationToken } from '$lib/server/token';
+import { sendEmailVerificationLink } from '$lib/server/email';
 
-const signupSchema = z.object({
-	email: z.string().email().trim(),
-	handle: z.string().trim().min(4),
-	name: z.string().trim().min(1),
-	password: z.string().trim().min(6, { message: 'password must be more than 6 characters' })
-});
+import type { Actions } from './$types';
+
+const isValidEmail = (maybeEmail: unknown): maybeEmail is string => {
+	if (typeof maybeEmail !== 'string') return false;
+	if (maybeEmail.length > 255) return false;
+	const emailRegexp = /^.+@.+$/; // [one or more character]@[one or more character]
+	return emailRegexp.test(maybeEmail);
+};
 
 export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
-	if (session) throw redirect(302, '/profile/timeline');
-	const signupForm = await superValidate(signupSchema);
-
-	return { signupForm };
+	if (session) {
+		if (!session.user.email_verified) throw redirect(302, '/email-verification');
+		throw redirect(302, '/profile');
+	}
+	return {};
 };
 
-export const actions = {
+export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const signupForm = await superValidate(request, signupSchema);
-		if (!signupForm.valid) {
-			console.log(signupForm);
-			return message(signupForm, 'invalid inputs', { status: 400 });
+		const formData = await request.formData();
+		const email = formData.get('email');
+		const password = formData.get('password');
+		const handle = formData.get('handle');
+		const name = formData.get('name');
+		// basic check
+		console.log('DATA:', email, password);
+		if (!isValidEmail(email)) {
+			return fail(400, {
+				message: 'Invalid email'
+			});
+		}
+		if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
+			return fail(400, {
+				message: 'Invalid password'
+			});
 		}
 
-		const { email, name, handle, password } = signupForm.data;
-
+		if (!handle || typeof handle !== 'string') {
+			return fail(400, {
+				message: 'Invalid password'
+			});
+		}
+		if (!name || typeof name !== 'string') {
+			return fail(400, {
+				message: 'Invalid password'
+			});
+		}
+		console.log('creating user');
 		try {
 			const user = await auth.createUser({
 				key: {
-					providerId: 'username',
-					providerUserId: email,
-					password
+					providerId: 'email', // auth method
+					providerUserId: email.toLowerCase(), // unique id when using "email" auth method
+					password // hashed by Lucia
 				},
 				attributes: {
-					email,
+					email: email.toLowerCase(),
+					email_verified: false,
 					name,
-					handle
+					handle, // `Number(false)` if stored as an integer
+					avatar: null
 				}
 			});
-
-			console.log('USER:', user);
-
 			const session = await auth.createSession({
 				userId: user.userId,
 				attributes: {}
 			});
-			locals.auth.setSession(session);
-		} catch (e: any) {
-			console.log('something went wrong', e.message);
-		}
+			locals.auth.setSession(session); // set session cookie
 
-		return { signupForm };
+			const token = await generateEmailVerificationToken(user.userId);
+			await sendEmailVerificationLink(email, token);
+		} catch (e: any) {
+			// this part depends on the database you're using
+			// check for unique constraint error in user table
+			// if (e instanceof SomeDatabaseError && e.message === USER_TABLE_UNIQUE_CONSTRAINT_ERROR) {
+			// 	return new Response('Account already exists', {
+			// 		status: 400
+			// 	});
+			// }
+			console.log('DB Error', e.message);
+			return fail(500, {
+				message: 'An unknown error occurred'
+			});
+		}
+		// make sure you don't throw inside a try/catch block!
+		throw redirect(302, '/email-verification');
 	}
 };
-
-// import { createSession } from '$lib/utils.js';
-
-// export const load = async ({ locals }) => {
-// 	const { accountSession } = locals;
-// 	if (accountSession) {
-// 		throw redirect(302, '/profile');
-// 	}
-// 	const signupForm = await superValidate(signupSchema);
-// 	return { signupForm };
-// };
-
-// export const actions = {
-// 	default: async ({ request, cookies }) => {
-// 		const signupForm = await superValidate(request, signupSchema);
-
-// 		if (!signupForm.valid) {
-// 			return message(signupForm, 'invalid inputs', { status: 400 });
-// 		}
-
-// 		try {
-// 			await clerk.users.createUser({ emailAddress: [signupForm.data.email] });
-// 			const newAccount = await account.create(signupForm.data);
-
-// 			await account.session.create(newAccount, cookies);
-// 			return { signupForm };
-// 		} catch (err: any) {
-// 			return message(signupForm, err.message, { status: 400 });
-// 		}
-// 	}
-// };

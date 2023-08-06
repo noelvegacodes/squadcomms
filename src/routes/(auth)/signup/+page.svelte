@@ -1,137 +1,85 @@
+<!-- routes/signup/+page.svelte
 <script lang="ts">
-	import { createCheckbox } from '@melt-ui/svelte';
-	import { AtSign, Check } from 'lucide-svelte';
-import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	const { root, input, isChecked } = createCheckbox({ checked: 'indeterminate' });
-	import { superForm } from 'sveltekit-superforms/client';
-	import { invalidateAll } from '$app/navigation';
-	import { isEmpty } from '$lib/utils.js';
-	export let data;
-
-	const {
-		form: signupForm,
-		errors,
-		constraints,
-		enhance,
-		message
-	} = superForm(data.signupForm, {
-		onUpdated({ form }) {
-			if (form.valid) {
-				console.log('redirect');
-				invalidateAll();
-			}
-		}
-	});
+	import { enhance } from "$app/forms";
 </script>
 
-<form method="POST" use:enhance class="border-2 max-w-2xl mx-auto p-10 rounded-lg mt-20">
-	{#if !isEmpty($errors)}<p class="text-red-500">Invalid form input</p>{/if}
-	{#if $message}<p class="text-red-500">{$message}</p>{/if}
+<div class="bg-white">
+	<h1>Sign up</h1>
+	<form method="post" use:enhance >
+		<label for="email">Email</label>
+		<input name="email" id="email" /><br />
+		<label for="password">Password</label>
+		<input type="password" name="password" id="password" /><br />
+		<input type="submit" />
+	</form>
+	<a href="/signin">Sign in</a>
+</div> -->
 
-	<div class="flex flex-col gap-4">
-		<div class="flex flex-col flex-1">
-			<label for="email">Email</label>
-			<input
-				name="email"
-				id="email"
-				type="text"
-				placeholder="Rick.Astley@example.com"
-				class="border-2 rounded-lg p-1 px-2"
-				bind:value={$signupForm.email}
-				{...$constraints.email}
-			/>
-			{#if $errors.email}
-				<p class="text-red-500">{$errors.email}</p>
-			{/if}
-		</div>
-		<div class="flex gap-10">
-			<div class="flex flex-col flex-1">
-				<label for="email">Name</label>
-				<input
-					name="name"
-					id="name"
-					type="text"
-					placeholder="Rick Astley"
-					class="border-2 rounded-lg p-1 px-2"
-					bind:value={$signupForm.name}
-					{...$constraints.name}
-				/>
-				{#if $errors.email}
-					<p class="text-red-500">{$errors.name}</p>
-				{/if}
-			</div>
-			<div class="flex flex-col flex-1">
-				<label for="handle">Handle</label>
-				<div class=" flex items-center">
-					<div class="h-full border-2 border-r-0 rounded-l-lg px-1 items-center flex">
-						<AtSign size={18} class="text-gray-400" />
+<!-- routes/signin/+page.svelte -->
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import { AtSign, BookOpenCheck } from 'lucide-svelte';
+</script>
+
+<div class="wrapper">
+	<header class="p-6 max-w-7xl w-full mx-auto">
+		<a href="/" class="logo flex gap-2 text-2xl items-center">
+			<BookOpenCheck size={24} class="text-amber-500  " />
+			<span class="leading-none font-bold text-white">Buildstory</span>
+		</a>
+	</header>
+
+	<div class="flex justify-center pt-20">
+		<div class="w-full h-fit bg-white max-w-lg p-6 sm:p-8 rounded-lg">
+			<form method="post" use:enhance class="mb-4">
+				<h1 class="text-xl font-bold mb-4">Sign up</h1>
+				<div class="flex flex-col gap-4">
+					<label for="email">Email</label>
+					<input name="email" id="email" />
+					<div class="flex gap-4">
+						<div class="flex-1">
+							<label for="name">Name</label>
+							<input name="name" id="name" />
+						</div>
+						<div class="flex-1">
+							<label for="handle">Handle</label>
+							<input name="handle" id="handle" class="border pl-8" />
+							<AtSign size={16} class="absolute top-[33px] left-2 text-slate-400" />
+						</div>
 					</div>
-					<input
-						name="handle"
-						id="handle"
-						type="text"
-						placeholder="NvrGonnaGiveYouUp"
-						class="border-2 rounded-r-lg p-1 px-2 flex-1"
-						bind:value={$signupForm.handle}
-						{...$constraints.handle}
-					/>
+					<label for="password">Password</label>
+					<input type="password" name="password" id="password" />
+					<button type="submit" class="bg-amber-500 text-white py-1 px-4 rounded font-semibold"
+						>Submit</button
+					>
 				</div>
-				{#if $errors.handle}
-					<p class="text-red-500">{$errors.handle}</p>
-				{/if}
-			</div>
+			</form>
+			<p class="text-sm">
+				Already have an account? <a
+					href="/signin"
+					class="text-blue-500 hover:underline whitespace-nowrap">Sign in</a
+				>
+			</p>
 		</div>
-
-		<div class="flex flex-col flex-1 mb-2">
-			{#if $errors.password}
-				<p class="text-red-500">{$errors.password}</p>
-			{/if}
-			<label for="password">Password</label>
-			<input
-				name="password"
-				id="password"
-				type="password"
-				placeholder="*********"
-				class="border-2 rounded-lg p-1 px-2"
-				bind:value={$signupForm.password}
-				{...$constraints.password}
-			/>
-		</div>
-		<!-- 
-        <div class="flex  gap-4">
-            <button
-            {...$root}
-            use:root
-            class="flex h-5 w-6 appearance-none items-center justify-center
-                    rounded  text-white shadow-lg hover:opacity-75 border border-gray-400"
-            class:checked={$isChecked}
-            id="checkbox"
-            >
-            {#if $isChecked}
-                <Check size={16}/>
-            {/if}
-            <input  {...$input} use:input />
-            </button>
-            <label class="text-sm inline-block -mt-1 text-black" for="checkbox">
-            Yes, I understand and agree to the Terms of Service , including the User Agreement and Privacy Policy .
-            </label>
-        </div> -->
-
-		<button class="bg-green-600 w-full py-2 text-white font-semibold rounded-full">
-			Create my account
-		</button>
-
-		<p class="text-center">
-			Already have an account?
-			<a href="/login" class="text-blue-500 underline">Log In</a>
-		</p>
 	</div>
-</form>
-
-<SuperDebug data={$signupForm} />
+</div>
 
 <style lang="postcss">
-	.checked {
-		@apply bg-blue-500;
+	.wrapper {
+		height: 100%;
+		display: grid;
+		grid-template-rows: auto 1fr;
+	}
+
+	label {
+		@apply block;
+	}
+
+	input {
+		@apply border shadow-sm w-full rounded p-1 pl-2;
+	}
+
+	input[name='handle'] {
+		@apply pl-[28px];
 	}
 </style>

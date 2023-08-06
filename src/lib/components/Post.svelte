@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { Heart, MessagesSquare, Repeat, Share } from 'lucide-svelte';
+	import { user } from '$lib/stores/mock/user'
 	export let name: string;
 	export let handle: string;
 	export let content: string;
-	export let avatar: string;
+	export let avatar: string | null;
 	export let date: string;
 	export let comments: number;
 	export let reposts: number;
@@ -26,8 +27,9 @@
 			<p class="text-slate-100 mb-4">{content}</p>
 			{#if image}
 				<div class="flex justify-center mb-2">
-					<div class="h-[450px] w-full rounded-lg overflow-clip border-2 border-slate-600">
-						<img src={image} class="w-full h-full" alt="post" />
+					 <!-- h-[450px] -->
+					<div class="img-container max-h-[450px] rounded-lg overflow-clip border-2 border-slate-600">
+						<img src={image} class="w-full h-full object-cover" alt="post" />
 					</div>
 				</div>
 			{/if}
@@ -35,9 +37,7 @@
 
 		<!-- Comments Reposts Likes -->
 		<div class="h-12 flex justify-between">
-			<button
-				class=" h-full flex items-center gap-2 px-4 group transition-all duration-200"
-			>
+			<button class=" h-full flex items-center gap-2  group transition-all duration-200">
 				<div
 					class="h-8 w-8 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:text-blue-500 rounded-full transition-all duration-200"
 				>
@@ -45,11 +45,10 @@
 				</div>
 				<div class="group-hover:text-blue-500 transition-all duration-200 text-sm">
 					{comments}
-					comments
 				</div>
 			</button>
 			<button
-				class=" h-full flex justify-center items-center gap-2 px-4 group transition-all duration-200"
+				class=" h-full flex justify-center items-center gap-2 group transition-all duration-200"
 			>
 				<div
 					class="h-8 w-8 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:text-emerald-500 rounded-full transition-all duration-200"
@@ -58,11 +57,10 @@
 				</div>
 				<div class="group-hover:text-emerald-500 transition-all duration-200 text-sm">
 					{reposts}
-					reposts
 				</div>
 			</button>
 			<button
-				class=" h-full flex justify-end items-center gap-2 px-4 group transition-all duration-200"
+				class=" h-full flex justify-end items-center gap-2  group transition-all duration-200"
 			>
 				<div
 					class="h-8 w-8 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:text-rose-500 rounded-full transition-all duration-200"
@@ -71,9 +69,14 @@
 				</div>
 				<div class="group-hover:text-rose-500 transition-all duration-200 text-sm">
 					{likes}
-					likes
 				</div>
 			</button>
 		</div>
 	</div>
 </div>
+
+<style>
+	.img-container {
+		aspect-ratio: 1;
+	}
+</style>

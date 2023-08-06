@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Avatar from '$lib/components/Avatar.svelte';
-	import NewPostForm from '$lib/components/NewPostForm.svelte';
 	import Post from '$lib/components/Post.svelte';
 	import { faker } from '@faker-js/faker/locale/af_ZA';
-
+	import { ImagePlus, ListTodo } from 'lucide-svelte';
+	import { AutoResizeTextarea } from 'svelte-autoresize-textarea';
+	let text: string;
 
 	const posts = new Array(10).fill(null).map((post) => {
 		const fname = faker.person.firstName();
@@ -22,12 +24,40 @@
 			image: rng < 3 ? faker.image.urlLoremFlickr({ category: 'cats' }) : ''
 		};
 	});
+
+	export let data;
 </script>
 
-<div class="divide-y divide-slate-700">
-	<NewPostForm />
+<form method="POST" class="post-form" action="?/createPost" use:enhance >
+	<Avatar size="md" url={data.avatar} name="{data.name}" color="bg-amber-500" />
+	<div class="flex-1">
+		<AutoResizeTextarea
+			name="text"
+			placeholder="What is happening?!"
+			class="resize-none w-full p-2 bg-transparent text-xl overflow-hidden outline-none"
+			bind:value={text}
+		/>
+		<div class="px-2 flex gap-4 items-center">
+			<ImagePlus size={20} />
+			<ListTodo size={20} />
+			<button type="submit">Post</button>
+		</div>
+	</div>
+</form>
+{#if posts}
 	{#each posts as post}
 		<Post {...post} />
 	{/each}
-</div>
+{:else}
+	<p>You haven't posted yet</p>
+{/if}
+
+<style lang="postcss">
+	.post-form {
+		@apply flex gap-4 p-6 border-b border-slate-700;
+		& button[type='submit'] {
+			@apply bg-blue-500 text-white py-1 px-4 rounded-full ml-auto;
+		}
+	}
+</style>
 

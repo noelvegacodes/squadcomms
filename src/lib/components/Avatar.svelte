@@ -23,20 +23,25 @@
 			break;
 	}
 
-	function getInitials() {
-		let parts = name.split(' ');
+	function getInitials(name: string) {
+		let parts = name?.split(' ');
+		if(!parts) {
+			return ''
+		}
 		return parts.map((part) => part[0]).join('');
 	}
+	$: initials = getInitials(name)
+
 </script>
 
 <div
-	class="rounded-full overflow-clip flex items-center justify-center {color}"
+	class="rounded-full overflow-clip flex items-center justify-center min-w-fit {color}"
 	style="--hw: {hw}px"
 >
 	{#if url}
-		<img src={url} alt="{name} profile image" class="h-full w-full" />
+		<img src={url} alt="{name} profile image" class="h-full w-full object-cover" />
 	{:else}
-		{getInitials()}
+		{initials}
 	{/if}
 </div>
 

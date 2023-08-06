@@ -28,8 +28,10 @@ export const auth = lucia({
 	getUserAttributes: (data) => {
 		return {
 			email: data.email,
-			handle: data.handle,
-			name: data.name
+			email_verified: data.email_verified,
+			name: data.name,
+			handle: data.handle, // `Boolean(data.email_verified)` if stored as an integer
+			avatar: data.avatar
 		};
 	}
 });

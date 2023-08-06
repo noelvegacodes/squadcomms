@@ -1,64 +1,60 @@
-import type { InferModel } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
-import { timestamp, pgTable, serial, varchar, integer, text } from 'drizzle-orm/pg-core';
+import { bigint, boolean, char, mysqlTable, timestamp, varchar } from 'drizzle-orm/mysql-core';
 
-export const AccountsTable = pgTable('accounts', {
-	id: serial('id').primaryKey().notNull(),
-	handle: varchar('handle', { length: 50 }).notNull().unique(),
-	email: varchar('email', { length: 100 }).notNull().unique(),
-	hashedPassword: varchar('hashed_password', { length: 72 }).notNull(),
+export const users = mysqlTable('users', {
+	id: varchar('id', { length: 31 }).primaryKey().notNull(),
+	email: varchar('email', { length: 100 }).unique().notNull(),
+	email_verified: boolean('email_verified').default(false).notNull(),
+	name: varchar('name', { length: 32 }).notNull(),
+	handle: varchar('handle', { length: 16 }).unique().notNull(),
+	bio: varchar('bio', { length: 300 }),
+	location: varchar('location', { length: 30 }),
+	website: varchar('website', { length: 100 }),
+	avatar: varchar('avatar', { length: 300 }),
+	banner: varchar('banner', { length: 3000 }),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow()
 });
 
-export const UsersTable = pgTable('users', {
-	id: serial('id').primaryKey().notNull(),
-	accountId: integer('account_id')
-		.notNull()
-		.references(() => AccountsTable.id),
-	displayName: varchar('display_name').notNull(),
-	avatarUrl: text('avatar_url'),
-	bannerUrl: text('banner_url'),
-	bio: varchar('bio', { length: 500 }),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+// TODO: support images, polls, likes, comments, sharing
+export const posts = mysqlTable('posts', {
+	id: char('id', { length: 21 }).notNull().primaryKey(),
+	text: varchar('text', { length: 500 }).notNull(),
+	user_id: varchar('user_id', { length: 31 }).notNull()
 });
 
-export const UserRelations = relations(UsersTable, ({ one, many }) => ({
-	account: one(AccountsTable),
-	posts: many(PostsTable)
+export const usersRelations = relations(users, ({ many }) => ({
+	posts: many(posts)
 }));
 
-export const PostsTable = pgTable('posts', {
-	id: serial('id').primaryKey().notNull(),
-	text: text('text'),
-	authorId: integer('author_id')
-		.notNull()
-		.references(() => UsersTable.id)
-});
-
-export const PostsRelations = relations(PostsTable, ({ one, many }) => ({
-	author: one(UsersTable, {
-		fields: [PostsTable.authorId],
-		references: [UsersTable.id]
-	}),
-	comments: many(CommentsTable)
-}));
-
-export const CommentsTable = pgTable('comments', {
-	id: serial('id').primaryKey(),
-	text: text('text'),
-	authorId: integer('author_id').references(() => UsersTable.id),
-	postId: integer('post_id').references(() => PostsTable.id)
-});
-
-export const CommentsRelations = relations(CommentsTable, ({ one }) => ({
-	post: one(PostsTable, {
-		fields: [CommentsTable.postId],
-		references: [PostsTable.id]
+export const postRelations = relations(posts, ({ one }) => ({
+	user: one(users, {
+		fields: [posts.id],
+		references: [users.id]
 	})
 }));
 
-export type NewUserType = InferModel<typeof UsersTable, 'insert'>;
-export type UserType = InferModel<typeof UsersTable, 'select'>;
-export type AccountType = InferModel<typeof AccountsTable, 'select'>;
+export const userKeys = mysqlTable('user_keys', {
+	id: varchar('id', { length: 255 }).primaryKey().notNull(),
+	user_id: varchar('user_id', { length: 15 }).notNull(),
+	hashedPassword: varchar('hashed_password', { length: 255 })
+});
+
+export const userSessions = mysqlTable('user_sessions', {
+	id: varchar('id', { length: 127 }).primaryKey().notNull(),
+	user_id: varchar('user_id', { length: 15 }).notNull(),
+	activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
+	idleExpires: bigint('idle_expires', { mode: 'number' }).notNull()
+});
+
+export const emailVerificationTokens = mysqlTable('email_verification_tokens', {
+	id: varchar('id', { length: 127 }).notNull(),
+	expires: bigint('expires', { mode: 'number' }).notNull().primaryKey(),
+	user_id: varchar('user_id', { length: 31 }).notNull()
+});
+
+export const passwordResetTokens = mysqlTable('password_reset_tokens', {
+	id: varchar('id', { length: 127 }).notNull(),
+	expires: bigint('expires', { mode: 'number' }).notNull().primaryKey(),
+	user_id: varchar('user_id', { length: 31 }).notNull()
+});
