@@ -42,11 +42,13 @@ export const actions = {
 				// user does not exist
 				// or invalid password
 				return fail(400, {
-					message: 'Incorrect email or password'
+					message: 'Incorrect email or password',
+					form
 				});
 			}
 			return fail(500, {
-				message: 'An unknown error occurred'
+				message: 'An unknown error occurred',
+				form
 			});
 		}
 		if (handle) {
