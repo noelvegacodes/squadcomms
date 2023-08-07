@@ -7,11 +7,16 @@ import type { Session } from 'lucia';
 /// <reference types="lucia" />
 declare global {
 	namespace App {
+		interface Error {
+			message: string;
+		}
 		interface Locals {
 			auth: import('lucia').AuthRequest;
 			session: Session;
 		}
-		interface PageData {}
+		interface PageData {
+			flash?: { type: 'success' | 'error'; message: string };
+		}
 	}
 	namespace Lucia {
 		type Auth = import('$lib/server/lucia').Auth;

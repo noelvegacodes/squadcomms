@@ -3,7 +3,6 @@ import { auth } from '$lib/server/lucia';
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	// we can pass `event` because we used the SvelteKit middleware
 	console.log('HOOK:', event.route, new Date());
 	event.locals.auth = auth.handleRequest(event);
 	const session = await auth.handleRequest(event).validate();
@@ -12,7 +11,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!session) {
 		// Protected Routes
 		if (route.startsWith('/(app)')) {
-			console.log('THIS IS A PROTECTED ROUTE:');
 			return new Response('Redirect', {
 				status: 303,
 				headers: { Location: `/signin` }

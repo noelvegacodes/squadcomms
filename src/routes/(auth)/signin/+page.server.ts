@@ -4,6 +4,7 @@ import { LuciaError } from 'lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms/server';
+import { setFlash } from 'sveltekit-flash-message/server';
 
 const signinSchema = z.object({
 	email: z.string().email(),
@@ -16,8 +17,9 @@ export const load = async () => {
 };
 
 export const actions = {
-	default: async ({ request, locals }) => {
-		const form = await superValidate(request, signinSchema);
+	default: async (event) => {
+		console.log('Sign in');
+		const form = await superValidate(event.request, signinSchema);
 
 		if (!form.valid) {
 			return fail(400, { form, message: 'form is invalid' });
@@ -27,35 +29,25 @@ export const actions = {
 		try {
 			// find user by key
 			// and validate password
+			console.log('ATTEMPT SESSION');
 			const key = await auth.useKey('email', form.data.email.toLowerCase(), form.data.password);
 			const session = await auth.createSession({
 				userId: key.userId,
 				attributes: {}
 			});
-			locals.auth.setSession(session); // set session cookie
+			console.log('SESSION CREATED:', session);
+			event.locals.auth.setSession(session); // set session cookie
 			handle = session.user.handle;
-		} catch (e) {
-			if (
-				e instanceof LuciaError &&
-				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
-			) {
-				// user does not exist
-				// or invalid password
-				return fail(400, {
-					message: 'Incorrect email or password',
-					form
-				});
-			}
-			return fail(500, {
-				message: 'An unknown error occurred',
-				form
-			});
+		} catch (e: any) {
+			console.log(e.message);
+			setFlash({ type: 'error', message: 'Invalid credentials' }, event);
 		}
 		if (handle) {
 			console.log('redirect');
 			throw redirect(302, `/${handle}`);
 		}
-
+		console.log('Settings flash message');
+		setFlash({ type: 'error', message: 'Invalid credentials' }, event);
 		return { form };
 		// throw redirect(302, `/${session.user.handle}`);
 

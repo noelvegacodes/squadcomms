@@ -15,7 +15,7 @@ const profileFormSchema = z.object({
 	banner: z.any().nullable()
 });
 
-export const load = async ({ params }) => {
+export const load = async ({ params, request }) => {
 	let user;
 	try {
 		user = (await db.select().from(users).where(eq(users.handle, params.handle)))[0];
@@ -23,7 +23,9 @@ export const load = async ({ params }) => {
 		console.log('server error: unable to get user');
 	}
 	if (!user?.id) {
-		throw redirect(302, '/home');
+		throw error(400, {
+			message: 'Hmm...this page doesn’t exist.'
+		});
 	}
 	const form = await superValidate(user, profileFormSchema);
 	console.log('LAYOUT LOAD', new Date());
