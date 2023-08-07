@@ -50,6 +50,9 @@ dependencies:
   svelte-email:
     specifier: ^0.0.4
     version: 0.0.4
+  svelte-img-previewer:
+    specifier: ^0.0.1
+    version: 0.0.1(svelte@4.1.0)
 
 devDependencies:
   '@faker-js/faker':
@@ -3476,6 +3479,14 @@ packages:
       svelte: ^3.19.0 || ^4.0.0-next.0
     dependencies:
       svelte: 4.1.0
+
+  /svelte-img-previewer@0.0.1(svelte@4.1.0):
+    resolution: {integrity: sha512-8TKP5vN54rXNXcdHfsRzrXXJDzaLdghvSqXgGVxA8EkbSes2pZib7gP0Fku9BCZWAAyFGGY6bJzK9o6UHpQoNw==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 4.1.0
+    dev: false
 
   /svelte-preprocess@5.0.4(postcss-load-config@4.0.1)(postcss@8.4.26)(svelte@4.1.0)(typescript@5.1.6):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}

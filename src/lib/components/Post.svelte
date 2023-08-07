@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { Heart, MessagesSquare, Repeat, Share } from 'lucide-svelte';
-	import { user } from '$lib/stores/mock/user'
 	export let name: string;
 	export let handle: string;
 	export let content: string;
@@ -18,7 +17,7 @@
 	<div class="flex-1 -mt-1">
 		<div class="flex items-center gap-2">
 			<p class="font-bold text-slate-100">{name}</p>
-			<p class="text-sm text-slate-400">{handle}</p>
+			<p class="text-sm text-slate-400">@{handle}</p>
 			<p class=" text-xs text-slate-400">{date}</p>
 		</div>
 

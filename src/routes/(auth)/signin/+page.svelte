@@ -1,7 +1,10 @@
 <!-- routes/signin/+page.svelte -->
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { BookOpenCheck } from 'lucide-svelte';
+	import { superForm } from 'sveltekit-superforms/client';
+
+	export let data;
+	const { form, enhance} = superForm(data.form)
 </script>
 
 <div class="wrapper">
@@ -14,12 +17,12 @@
 
 	<div class="flex justify-center pt-20 px-4 sm:px-0">
 		<div class="w-full h-fit bg-white max-w-md p-6 sm:p-8 rounded-lg">
-			<form method="post" use:enhance class="mb-4">
+			<form method="post" use:enhance  class="mb-4">
 				<h1 class="text-xl font-bold mb-4">Sign in</h1>
 				<label for="email">Email</label>
-				<input name="email" id="email" /><br />
+				<input name="email" id="email" bind:value={$form.email} /><br />
 				<label for="password">Password</label>
-				<input type="password" name="password" id="password" /><br />
+				<input type="password" name="password" id="password" bind:value={$form.password}/><br />
 				<button type="submit" class="bg-amber-500 text-white py-1 px-4 rounded font-semibold"
 					>Submit</button
 				>

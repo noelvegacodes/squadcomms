@@ -19,8 +19,9 @@ export const users = mysqlTable('users', {
 // TODO: support images, polls, likes, comments, sharing
 export const posts = mysqlTable('posts', {
 	id: char('id', { length: 21 }).notNull().primaryKey(),
+	user_id: varchar('user_id', { length: 31 }).notNull(),
 	text: varchar('text', { length: 500 }).notNull(),
-	user_id: varchar('user_id', { length: 31 }).notNull()
+	image: varchar('avatar', { length: 300 })
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

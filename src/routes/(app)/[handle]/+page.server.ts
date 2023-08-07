@@ -1,5 +1,5 @@
 // +page.server.ts
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -18,11 +18,8 @@ const profileFormSchema = z.object({
 });
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
-	if (!session) throw redirect(302, '/signup');
-
 	const timeline = await db.query.posts.findMany({
-		where: eq(posts.user_id, session.user.userId),
+		where: eq(posts.user_id, locals.session.user.userId),
 		with: {
 			user: true
 		}
@@ -75,7 +72,7 @@ export const actions: Actions = {
 
 		return { form };
 		// default: async ({ locals }) => {
-		// 	const session = await locals.auth.validate();
+		// 	const session = locals.session;;
 		// 	if (!session) throw redirect(302, '/signin');
 		// 	if (!session.user.email_verified) {
 		// 		throw redirect(302, '/email-verification');

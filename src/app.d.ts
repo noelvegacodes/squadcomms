@@ -2,12 +2,14 @@
 
 import type { AccountType } from '$lib/server/db/schema';
 import { session } from '$lib/types';
+import type { Session } from 'lucia';
 
 /// <reference types="lucia" />
 declare global {
 	namespace App {
 		interface Locals {
 			auth: import('lucia').AuthRequest;
+			session: Session;
 		}
 		interface PageData {}
 	}

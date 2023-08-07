@@ -2,43 +2,38 @@
 import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
 import { fail, redirect } from '@sveltejs/kit';
+import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
 
-import type { Actions, PageServerLoad } from './$types';
+const signinSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(6).max(32)
+});
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
-	if (session) {
-		if (!session.user.email_verified) throw redirect(302, '/email-verification');
-		throw redirect(302, '/profile');
-	}
-	return {};
+export const load = async () => {
+	const form = await superValidate(signinSchema);
+	return { form };
 };
 
-export const actions: Actions = {
+export const actions = {
 	default: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
-		// basic check
-		if (typeof email !== 'string' || email.length < 1 || email.length > 255) {
-			return fail(400, {
-				message: 'Invalid email'
-			});
+		const form = await superValidate(request, signinSchema);
+
+		if (!form.valid) {
+			return fail(400, { form, message: 'form is invalid' });
 		}
-		if (typeof password !== 'string' || password.length < 1 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
+
+		let handle;
 		try {
 			// find user by key
 			// and validate password
-			const key = await auth.useKey('email', email.toLowerCase(), password);
+			const key = await auth.useKey('email', form.data.email.toLowerCase(), form.data.password);
 			const session = await auth.createSession({
 				userId: key.userId,
 				attributes: {}
 			});
 			locals.auth.setSession(session); // set session cookie
+			handle = session.user.handle;
 		} catch (e) {
 			if (
 				e instanceof LuciaError &&
@@ -54,8 +49,15 @@ export const actions: Actions = {
 				message: 'An unknown error occurred'
 			});
 		}
+		if (handle) {
+			console.log('redirect');
+			throw redirect(302, `/${handle}`);
+		}
+
+		return { form };
+		// throw redirect(302, `/${session.user.handle}`);
+
 		// redirect to profile page
 		// make sure you don't throw inside a try/catch block!
-		throw redirect(302, '/profile');
 	}
 };

@@ -11,7 +11,7 @@ const signupSchema = z.object({
 });
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const session = locals.session;
 	if (session) throw redirect(302, '/profile');
 	const signupForm = await superValidate(signupSchema);
 

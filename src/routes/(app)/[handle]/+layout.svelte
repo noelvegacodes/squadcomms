@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import {createImagePreviewer} from 'svelte-img-previewer'
 	import Avatar from '$lib/components/Avatar.svelte';
 	import Banner from '$lib/components/Banner.svelte';
 	import { page } from '$app/stores';
@@ -8,7 +8,6 @@
 	import { Calendar, ImagePlus, Search, X } from 'lucide-svelte';
 	import { createFocus } from '$lib/use-actions/createFocus';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { createImagePreviewer } from '$lib/actions/image-previewer';
 	const { trigger, portal, overlay, content, title, description, close, open } = createDialog();
 	let { focus: focusName, isFocused: nameFocused } = createFocus();
 	let { focus: focusBio, isFocused: bioFocused } = createFocus();
@@ -16,13 +15,12 @@
 	let { focus: focusWebsite, isFocused: websiteFocused } = createFocus();
 	
 	export let data;
+	
 	const { form, enhance } = superForm(data.form);
 	
-	// user data
-	const { avatar, banner} = $user;
 	// usage
-	const {src: bannerImg, previewImage: prevBanner} = createImagePreviewer(data.banner);
-	const {src: avatarImg, previewImage: prevAvatar} = createImagePreviewer(data.avatar);
+	const {src: bannerImg, imagePreviewer: prevBanner} = createImagePreviewer(data.user.banner);
+	const {src: avatarImg, imagePreviewer: prevAvatar} = createImagePreviewer(data.user.avatar);
 
 
 
@@ -37,12 +35,12 @@
 			<section class="p-6 border-b border-slate-700">
 				<div class="relative">
 					<!-- Banner -->
-					<Banner src={data.banner} />
+					<Banner src={data.user.banner} />
 					<!-- Avatar -->
 					<div
 						class="absolute -translate-y-1/2 left-10"
 					>
-						<Avatar color="bg-amber-500" name={data.name} size="2xl" url={data.avatar} />
+						<Avatar color="bg-amber-500" name={data.user.name} size="2xl" url={data.user.avatar} />
 					</div>
 					<!-- Edit Profile Button -->
 					<button
@@ -54,14 +52,14 @@
 				</div>
 
 				<div class="pt-16 pb-6">
-					<p class="mb-1 text-xl font-bold">{data.name}</p>
-					<div class="mb-2 text-slate-300">@{data.handle} {data.location ?? ''}</div>
+					<p class="mb-1 text-xl font-bold">{data.user.name}</p>
+					<div class="mb-2 text-slate-300">@{data.user.handle} {data.user.location ?? ''}</div>
 
-					<p class="mb-1">{data.bio ?? ''}</p>
-					<a class="mb-2 text-sky-500 underline" href={data.website} target="_blank">{data.website ?? ''}</a>
+					<p class="mb-1">{data.user.bio ?? ''}</p>
+					<a class="mb-2 text-sky-500 underline" href={data.user.website} target="_blank">{data.user.website ?? ''}</a>
 
 					<p class="flex items-baseline gap-2 text-slate-300">
-						<Calendar size={14} /> Joined {data.createdAt.toLocaleDateString('en-us', {
+						<Calendar size={14} /> Joined {data.user.createdAt.toLocaleDateString('en-us', {
 							month: 'long',
 							year: 'numeric'
 						})}
@@ -82,7 +80,7 @@
 			<!-- Profile section tabs -->
 			<section class="flex h-14 sticky -top-1 border-b z-10 border-slate-700 bg-slate-950">
 				<a
-					href="/profile"
+					href="/"
 					class="flex-1 text-center flex justify-center hover:bg-slate-900 transition-colors duration-200 h-full"
 				>
 					<div class="w-fit flex flex-col justify-between h-full">
@@ -96,7 +94,7 @@
 					</div>
 				</a>
 				<a
-					href="/profile/projects"
+					href="/{data.user.handle}/projects"
 					class="flex-1 text-center flex justify-center hover:bg-slate-900 h-full items-end transition-colors duration-200"
 				>
 					<div class="w-fit flex flex-col justify-between h-full">
@@ -110,7 +108,7 @@
 					</div>
 				</a>
 				<a
-					href="/profile/about"
+					href="/{data.user.handle}/about"
 					class="flex-1 text-center flex justify-center hover:bg-slate-900 h-full items-end transition-colors duration-200"
 				>
 					<div class="w-fit flex flex-col justify-between h-full">
@@ -181,7 +179,7 @@
 				<!-- Avatar -->
 				<div class="absolute -translate-y-1/2 left-10 ">
 					<div class=" relative  ">
-						<Avatar size="2xl" url={$avatarImg} name={data.name} color="bg-amber-500" />
+						<Avatar size="2xl" url={$avatarImg} name={$form.name} color="bg-amber-500" />
 						<!-- <img src={$avatarImg} alt="user-avatar" class="h-full w-full" /> -->
 						<label for="avatar" class="z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-500/30 p-3 rounded-full cursor-pointer">
 							<ImagePlus size={22} class="text-black " />

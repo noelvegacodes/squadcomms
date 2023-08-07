@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	
 	import { AlignJustify, BellRing, BookOpenCheck, Home, ListTodo, LogOut, Mail,  User, X } from 'lucide-svelte';
-	import { fly, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
+	export let data;
+	
 	$: pathname = $page.url.pathname;
 
 	$: showMobileNav = false;
+	
 
 	const closeMobileNav = () => showMobileNav = false;
 	const toggleMobileNav = () => showMobileNav = !showMobileNav;
@@ -46,7 +50,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="/profile" on:click={closeMobileNav} class:selected={pathname.startsWith('/profile')}>
+				<a href="/" on:click={closeMobileNav} class:selected={pathname.startsWith(`/${data.session.user.handle}`)}>
 					<User size={24} />
 					<span class=" ">Profile</span>
 				</a>

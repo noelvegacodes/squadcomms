@@ -21,7 +21,7 @@
 				</form>
 			{/if}
 			{#if data.session}
-				<a href="/profile">Profile</a>
+				<a href={`/${data.session.user.handle}`}>Profile</a>
 			{/if}
 		</ul>
 	</nav>

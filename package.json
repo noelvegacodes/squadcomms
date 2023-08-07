@@ -61,6 +61,7 @@
 		"nanoid": "^4.0.2",
 		"resend": "^0.17.2",
 		"svelte-autoresize-textarea": "^0.0.6",
-		"svelte-email": "^0.0.4"
+		"svelte-email": "^0.0.4",
+		"svelte-img-previewer": "^0.0.1"
 	}
 }

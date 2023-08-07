@@ -1,24 +1,9 @@
-<!-- routes/signup/+page.svelte
 <script lang="ts">
-	import { enhance } from "$app/forms";
-</script>
-
-<div class="bg-white">
-	<h1>Sign up</h1>
-	<form method="post" use:enhance >
-		<label for="email">Email</label>
-		<input name="email" id="email" /><br />
-		<label for="password">Password</label>
-		<input type="password" name="password" id="password" /><br />
-		<input type="submit" />
-	</form>
-	<a href="/signin">Sign in</a>
-</div> -->
-
-<!-- routes/signin/+page.svelte -->
-<script lang="ts">
-	import { enhance } from '$app/forms';
 	import { AtSign, BookOpenCheck } from 'lucide-svelte';
+	import { superForm } from 'sveltekit-superforms/client';
+
+	export let data;
+	const { form, enhance} = superForm(data.form)
 </script>
 
 <div class="wrapper">
@@ -35,20 +20,20 @@
 				<h1 class="text-xl font-bold mb-4">Sign up</h1>
 				<div class="flex flex-col gap-4">
 					<label for="email">Email</label>
-					<input name="email" id="email" />
+					<input name="email" id="email" bind:value={$form.email} />
 					<div class="flex gap-4">
 						<div class="flex-1">
 							<label for="name">Name</label>
-							<input name="name" id="name" />
+							<input name="name" id="name" bind:value={$form.name} />
 						</div>
 						<div class="flex-1">
 							<label for="handle">Handle</label>
-							<input name="handle" id="handle" class="border pl-8" />
+							<input name="handle" id="handle" class="border pl-8" bind:value={$form.handle} />
 							<AtSign size={16} class="absolute top-[33px] left-2 text-slate-400" />
 						</div>
 					</div>
 					<label for="password">Password</label>
-					<input type="password" name="password" id="password" />
+					<input type="password" name="password" id="password" bind:value={$form.password} />
 					<button type="submit" class="bg-amber-500 text-white py-1 px-4 rounded font-semibold"
 						>Submit</button
 					>

@@ -3,68 +3,44 @@ import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { generateEmailVerificationToken } from '$lib/server/token';
 import { sendEmailVerificationLink } from '$lib/server/email';
+import { z } from 'zod';
 
-import type { Actions } from './$types';
+const signupSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(6).max(32),
+	name: z.string().min(1).max(32),
+	handle: z
+		.string()
+		.refine((val) => !['messages', 'home', 'notifications', 'projects'].includes(val))
+});
 
-const isValidEmail = (maybeEmail: unknown): maybeEmail is string => {
-	if (typeof maybeEmail !== 'string') return false;
-	if (maybeEmail.length > 255) return false;
-	const emailRegexp = /^.+@.+$/; // [one or more character]@[one or more character]
-	return emailRegexp.test(maybeEmail);
+import { superValidate } from 'sveltekit-superforms/server';
+
+export const load = async () => {
+	const form = await superValidate(signupSchema);
+	return { form };
 };
 
-export const load = async ({ locals }) => {
-	const session = await locals.auth.validate();
-	if (session) {
-		if (!session.user.email_verified) throw redirect(302, '/email-verification');
-		throw redirect(302, '/profile');
-	}
-	return {};
-};
-
-export const actions: Actions = {
+export const actions = {
 	default: async ({ request, locals }) => {
-		const formData = await request.formData();
-		const email = formData.get('email');
-		const password = formData.get('password');
-		const handle = formData.get('handle');
-		const name = formData.get('name');
-		// basic check
-		console.log('DATA:', email, password);
-		if (!isValidEmail(email)) {
-			return fail(400, {
-				message: 'Invalid email'
-			});
-		}
-		if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
+		const form = await superValidate(request, signupSchema);
 
-		if (!handle || typeof handle !== 'string') {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
-		if (!name || typeof name !== 'string') {
-			return fail(400, {
-				message: 'Invalid password'
-			});
+		if (!form.valid) {
+			return fail(400, { message: 'Could not create account' });
 		}
 		console.log('creating user');
 		try {
 			const user = await auth.createUser({
 				key: {
 					providerId: 'email', // auth method
-					providerUserId: email.toLowerCase(), // unique id when using "email" auth method
-					password // hashed by Lucia
+					providerUserId: form.data.email.toLowerCase(), // unique id when using "email" auth method
+					password: form.data.password // hashed by Lucia
 				},
 				attributes: {
-					email: email.toLowerCase(),
+					email: form.data.email.toLowerCase(),
 					email_verified: false,
-					name,
-					handle, // `Number(false)` if stored as an integer
+					name: form.data.name,
+					handle: form.data.handle, // `Number(false)` if stored as an integer
 					avatar: null
 				}
 			});
@@ -75,15 +51,8 @@ export const actions: Actions = {
 			locals.auth.setSession(session); // set session cookie
 
 			const token = await generateEmailVerificationToken(user.userId);
-			await sendEmailVerificationLink(email, token);
+			await sendEmailVerificationLink(form.data.email, token);
 		} catch (e: any) {
-			// this part depends on the database you're using
-			// check for unique constraint error in user table
-			// if (e instanceof SomeDatabaseError && e.message === USER_TABLE_UNIQUE_CONSTRAINT_ERROR) {
-			// 	return new Response('Account already exists', {
-			// 		status: 400
-			// 	});
-			// }
 			console.log('DB Error', e.message);
 			return fail(500, {
 				message: 'An unknown error occurred'
