@@ -5,19 +5,14 @@ import type { Handle } from '@sveltejs/kit';
 export const handle: Handle = async ({ event, resolve }) => {
 	// we can pass `event` because we used the SvelteKit middleware
 	console.log('HOOK:', event.route, new Date());
-	const protectedRoutes = ['/(app)'];
 	event.locals.auth = auth.handleRequest(event);
 	const session = await auth.handleRequest(event).validate();
-	const route = event.route.id;
+	const route = event.route.id as string;
 
 	if (!session) {
-		if (!route) {
-			return new Response('Redirect', {
-				status: 303,
-				headers: { Location: `/` }
-			});
-		}
-		if (protectedRoutes.includes(route)) {
+		// Protected Routes
+		if (route.startsWith('/(app)')) {
+			console.log('THIS IS A PROTECTED ROUTE:');
 			return new Response('Redirect', {
 				status: 303,
 				headers: { Location: `/signin` }
@@ -33,7 +28,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 				headers: { Location: '/email-verification' }
 			});
 		}
-		if (route === '/' || route?.startsWith('/(auth)')) {
+
+		if (route === '/' || route.startsWith('/(auth)')) {
 			return new Response('Redirect', {
 				status: 303,
 				headers: { Location: `/${session.user.handle}` }

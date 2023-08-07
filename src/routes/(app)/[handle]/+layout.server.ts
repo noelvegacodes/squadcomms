@@ -22,7 +22,7 @@ export const load = async ({ params }) => {
 	} catch {
 		console.log('server error: unable to get user');
 	}
-	if (!user) {
+	if (!user?.id) {
 		throw redirect(302, '/home');
 	}
 	const form = await superValidate(user, profileFormSchema);

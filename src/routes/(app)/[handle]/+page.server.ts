@@ -71,13 +71,5 @@ export const actions: Actions = {
 		}
 
 		return { form };
-		// default: async ({ locals }) => {
-		// 	const session = locals.session;;
-		// 	if (!session) throw redirect(302, '/signin');
-		// 	if (!session.user.email_verified) {
-		// 		throw redirect(302, '/email-verification');
-		// 	}
-		// 	// ...
-		// }
 	}
 };
