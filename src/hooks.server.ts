@@ -1,38 +1,37 @@
-// src/hooks.server.ts
 import { auth } from '$lib/server/lucia';
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 
-export const handle: Handle = async ({ event, resolve }) => {
-	console.log('HOOK:', event.route, new Date());
+export const entry: Handle = async ({ event, resolve }) => {
 	event.locals.auth = auth.handleRequest(event);
-	const session = await auth.handleRequest(event).validate();
+	return await resolve(event);
+};
+
+export const protectedRoutes: Handle = async ({ event, resolve }) => {
 	const route = event.route.id as string;
 
-	if (!session) {
-		// Protected Routes
-		if (route.startsWith('/(app)')) {
+	if (route.startsWith('/(app)')) {
+		const session = await event.locals.auth.validate();
+		if (!session || !session.user.email_verified) {
 			return new Response('Redirect', {
 				status: 303,
 				headers: { Location: `/signin` }
 			});
 		}
-	}
-
-	if (session) {
 		event.locals.session = session;
-		if (!session.user.email_verified) {
-			return new Response('Redirect', {
-				status: 303,
-				headers: { Location: '/email-verification' }
-			});
-		}
+	}
 
-		if (route === '/' || route.startsWith('/(auth)')) {
+	if (route === '/') {
+		const session = await event.locals.auth.validate();
+		if (session?.user.email_verified) {
 			return new Response('Redirect', {
 				status: 303,
-				headers: { Location: `/${session.user.handle}` }
+				headers: { Location: `/home` }
 			});
 		}
 	}
+
 	return await resolve(event);
 };
+
+export const handle = sequence(entry, protectedRoutes);

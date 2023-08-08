@@ -10,11 +10,9 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 		const user_id = await validateEmailVerificationToken(token);
 		const user = await auth.getUser(user_id);
 		await auth.invalidateAllUserSessions(user.userId);
-		console.log('hello');
 		await auth.updateUserAttributes(user.userId, {
 			email_verified: true // `Number(true)` if stored as an integer
 		});
-		console.log('email verification');
 		const session = await auth.createSession({
 			userId: user.userId,
 			attributes: {}
@@ -23,7 +21,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/profile'
+				Location: `/${session.user.handle}`
 			}
 		});
 	} catch {

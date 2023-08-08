@@ -1,9 +1,9 @@
-// routes/signup/+page.server.ts
 import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { generateEmailVerificationToken } from '$lib/server/token';
 import { sendEmailVerificationLink } from '$lib/server/email';
 import { z } from 'zod';
+import { setFlash } from 'sveltekit-flash-message/server';
 
 const signupSchema = z.object({
 	email: z.string().email(),
@@ -16,19 +16,23 @@ const signupSchema = z.object({
 
 import { superValidate } from 'sveltekit-superforms/server';
 
-export const load = async () => {
-	const form = await superValidate(signupSchema);
-	return { form };
+export const load = async ({ locals }) => {
+	const session = await locals.auth.validate();
+	if (session?.user.email_verified) {
+		throw redirect(302, `/${session.user.handle}`);
+	} else {
+		const form = await superValidate(signupSchema);
+		return { form };
+	}
 };
 
 export const actions = {
-	default: async ({ request, locals }) => {
-		const form = await superValidate(request, signupSchema);
+	signup: async (event) => {
+		const form = await superValidate(event.request, signupSchema);
 
 		if (!form.valid) {
 			return fail(400, { message: 'Could not create account' });
 		}
-		console.log('creating user');
 		try {
 			const user = await auth.createUser({
 				key: {
@@ -48,17 +52,21 @@ export const actions = {
 				userId: user.userId,
 				attributes: {}
 			});
-			locals.auth.setSession(session); // set session cookie
+			event.locals.auth.setSession(session); // set session cookie
 
 			const token = await generateEmailVerificationToken(user.userId);
 			await sendEmailVerificationLink(form.data.email, token);
 		} catch (e: any) {
-			console.log('DB Error', e.message);
 			return fail(500, {
 				message: 'An unknown error occurred'
 			});
 		}
-		// make sure you don't throw inside a try/catch block!
+		// make sure you don't throw inside a try/catch bloc	k!
+		setFlash(
+			{ type: 'emailVerification', message: 'Check your email to verify and sign in' },
+			event
+		);
 		throw redirect(302, '/email-verification');
+		return { form };
 	}
 };

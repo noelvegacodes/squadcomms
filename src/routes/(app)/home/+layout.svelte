@@ -1,7 +1,18 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import { Search } from 'lucide-svelte';
+	let searchInput: HTMLInputElement;
 </script>
+
+<!-- <svelte:window on:keydown={(e) => {
+	console.log(e)
+	
+	if(e.ctrlKey && e.key === "s") {
+		e.preventDefault();
+		console.log("ctrl pressed")
+		searchInput.focus();
+	}
+}} /> -->
 
 <div class="wrapper divide-x divide-slate-700">
 	<div class="thing">
@@ -33,7 +44,7 @@
 		<!-- TODO: make search component -->
 		<div class="search hidden  items-center gap-2 px-4 py-2 border-slate-700 bg-slate-800 rounded-full">
 			<Search size={16} class="text-slate-300" />
-			<input type="text" placeholder="Search Buildstory" />
+			<input type="text" placeholder="Search Buildstory" bind:this={searchInput}/>
 		</div>
 
 		<div class="card  bg-slate-900 h-96 rounded-lg border border-slate-700" />

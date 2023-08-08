@@ -16,6 +16,7 @@
 
 </script>
 
+
 <div class="wrapper divide-x divide-slate-700">
 	<nav class="side-nav">
 		<div>
@@ -50,7 +51,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="/" on:click={closeMobileNav} class:selected={pathname.startsWith(`/${data.session.user.handle}`)}>
+				<a href="/{data.session.user.handle}" on:click={closeMobileNav} class:selected={pathname.startsWith(`/${data.session.user.handle}`)}>
 					<User size={24} />
 					<span class=" ">Profile</span>
 				</a>

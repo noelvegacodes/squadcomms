@@ -15,7 +15,7 @@ declare global {
 			session: Session;
 		}
 		interface PageData {
-			flash?: { type: 'success' | 'error'; message: string };
+			flash?: { type: 'success' | 'error' | 'emailVerification'; message: string };
 		}
 	}
 	namespace Lucia {

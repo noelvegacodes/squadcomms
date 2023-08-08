@@ -30,7 +30,6 @@ export const load = async ({ locals }) => {
 
 export const actions: Actions = {
 	update: async ({ request }) => {
-		console.log('update profile');
 		const formData = await request.formData();
 
 		const form = await superValidate(formData, profileFormSchema);

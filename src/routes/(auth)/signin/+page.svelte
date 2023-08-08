@@ -10,13 +10,6 @@
 
 </script>
 
-<div class="wrapper">
-	<header class="p-6 max-w-7xl w-full mx-auto">
-		<a href="/" class="logo flex gap-2 text-2xl items-center">
-			<BookOpenCheck size={24} class="text-amber-500  " />
-			<span class="leading-none font-bold text-white">Buildstory</span>
-		</a>
-	</header>
 
 	<div class="flex justify-center pt-20 px-4 sm:px-0">
 		<!-- {#if $flash}
@@ -42,7 +35,7 @@
 			</p>
 		</div>
 	</div>
-</div>
+
 
 <style lang="postcss">
 	.wrapper {

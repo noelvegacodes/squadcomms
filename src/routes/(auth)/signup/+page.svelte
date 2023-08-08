@@ -1,53 +1,71 @@
 <script lang="ts">
+	import Spinner from '$lib/components/Spinner.svelte';
 	import { AtSign, BookOpenCheck } from 'lucide-svelte';
 	import { superForm } from 'sveltekit-superforms/client';
-
+	
+	
 	export let data;
-	const { form, enhance} = superForm(data.form)
+	const { form, enhance, submitting} = superForm(data.form);
+
+	
 </script>
 
-<div class="wrapper">
-	<header class="p-6 max-w-7xl w-full mx-auto">
-		<a href="/" class="logo flex gap-2 text-2xl items-center">
-			<BookOpenCheck size={24} class="text-amber-500  " />
-			<span class="leading-none font-bold text-white">Buildstory</span>
-		</a>
-	</header>
 
-	<div class="flex justify-center pt-20">
-		<div class="w-full h-fit bg-white max-w-lg p-6 sm:p-8 rounded-lg">
-			<form method="post" use:enhance class="mb-4">
-				<h1 class="text-xl font-bold mb-4">Sign up</h1>
-				<div class="flex flex-col gap-4">
-					<label for="email">Email</label>
-					<input name="email" id="email" bind:value={$form.email} />
-					<div class="flex gap-4">
-						<div class="flex-1">
-							<label for="name">Name</label>
-							<input name="name" id="name" bind:value={$form.name} />
+
+	<div class="flex justify-center pt-16 relative">
+		
+		<div class="w-full h-fit max-w-lg">
+
+			<div class="p-6 sm:p-8 bg-white rounded-lg">
+
+				<form method="post" use:enhance class="mb-4 " action="?/signup">
+					<h1 class="text-xl font-bold mb-4">Sign up</h1>
+					<div class="flex flex-col gap-4">
+						<label for="email">Email</label>
+						<input name="email" id="email" bind:value={$form.email} />
+						<div class="flex gap-4">
+							<div class="flex-1">
+								<label for="name">Name</label>
+								<input name="name" id="name" bind:value={$form.name} />
+							</div>
+							<div class="flex-1">
+								<label for="handle">Handle</label>
+								<input name="handle" id="handle" class="border pl-8" bind:value={$form.handle} />
+								<AtSign size={16} class="absolute top-[33px] left-2 text-slate-400" />
+							</div>
 						</div>
-						<div class="flex-1">
-							<label for="handle">Handle</label>
-							<input name="handle" id="handle" class="border pl-8" bind:value={$form.handle} />
-							<AtSign size={16} class="absolute top-[33px] left-2 text-slate-400" />
+						<label for="password">Password</label>
+						<input type="password" name="password" id="password" bind:value={$form.password} />
+						<div class="flex items-center gap-2">
+							<button disabled={$submitting} type="submit" class="bg-amber-500 text-white py-1 px-4 rounded font-semibold ">
+								Submit
+							</button>
+							{#if $submitting}
+								<Spinner />
+							{/if}
+
 						</div>
 					</div>
-					<label for="password">Password</label>
-					<input type="password" name="password" id="password" bind:value={$form.password} />
-					<button type="submit" class="bg-amber-500 text-white py-1 px-4 rounded font-semibold"
-						>Submit</button
+				</form>
+				
+				<!-- <button type="button" on:click={() => toast.push({
+					component: {
+						src: ConfirmEmail,
+					},
+					dismissable: false,
+					initial: 0
+	
+				})}>Toast</button> -->
+				<p class="text-sm">
+					Already have an account? <a
+						href="/signin"
+						class="text-blue-500 hover:underline whitespace-nowrap">Sign in</a
 					>
-				</div>
-			</form>
-			<p class="text-sm">
-				Already have an account? <a
-					href="/signin"
-					class="text-blue-500 hover:underline whitespace-nowrap">Sign in</a
-				>
-			</p>
+				</p>
+			</div>
 		</div>
 	</div>
-</div>
+
 
 <style lang="postcss">
 	.wrapper {

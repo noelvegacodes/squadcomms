@@ -1,6 +1,6 @@
 // routes/password-reset/+page.server.ts
 import { auth } from '$lib/server/lucia';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { generatePasswordResetToken } from '$lib/server/token';
 import { sendPasswordResetLink } from '$lib/server/email';
 
