@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex p-6 pb-2 gap-4">
-	<Avatar size="md" name="Noel Vega" url={avatar} color="bg-blue-500" />
+	<Avatar size="md" name={name} url={avatar} color="bg-blue-500" />
 	<div class="flex-1 -mt-1">
 		<div class="flex items-center gap-2">
 			<p class="font-bold text-slate-100">{name}</p>
