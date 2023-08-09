@@ -15,7 +15,7 @@ const profileFormSchema = z.object({
 	banner: z.any().nullable()
 });
 
-export const load = async ({ params, request }) => {
+export const load = async ({ params, request, locals }) => {
 	let user;
 	try {
 		user = (await db.select().from(users).where(eq(users.handle, params.handle)))[0];
@@ -29,5 +29,6 @@ export const load = async ({ params, request }) => {
 	}
 	const form = await superValidate(user, profileFormSchema);
 	console.log('LAYOUT LOAD', new Date());
-	return { user, form };
+	const isMe = locals.session.user.userId === user.id;
+	return { user, form, isMe };
 };

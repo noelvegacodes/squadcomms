@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {createImagePreviewer} from 'svelte-img-previewer'
+	import Search from '$lib/components/Search.svelte'
 	import Avatar from '$lib/components/Avatar.svelte';
 	import Banner from '$lib/components/Banner.svelte';
 	import { page } from '$app/stores';
-	import { user } from '$lib/stores/mock/user';
 	import { createDialog } from '@melt-ui/svelte';
-	import { Calendar, ImagePlus, Search, X } from 'lucide-svelte';
+	import { Calendar, ImagePlus, X } from 'lucide-svelte';
 	import { createFocus } from '$lib/use-actions/createFocus';
 	import { superForm } from 'sveltekit-superforms/client';
 	const { trigger, portal, overlay, content, title, description, close, open } = createDialog();
@@ -43,12 +43,14 @@
 						<Avatar color="bg-amber-500" name={data.user.name} size="2xl" url={data.user.avatar} />
 					</div>
 					<!-- Edit Profile Button -->
+					{#if data.isMe}
 					<button
 						{...trigger}
 						use:trigger
 						class="text-white/90 hover:text-white absolute right-4 -bottom-12 border border-amber-500/50 hover:border-amber-500 hover:bg-amber-300/20 py-1 px-4 rounded-full z-10 transition-colors duration-100 font-semibold"
 						>Edit profile</button
 					>
+					{/if}
 				</div>
 
 				<div class="pt-16 pb-6">
@@ -130,12 +132,7 @@
 		</div>
 	</div>
 	<aside class="px-4 py-4 ">
-		<!-- TODO: make search component -->
-		<div class="search hidden  items-center gap-2 px-4 py-2 border-slate-700 bg-slate-800 rounded-full">
-			<Search size={16} class="text-slate-300" />
-			<input type="text" placeholder="Search Buildstory" />
-		</div>
-
+		<Search />
 		<div class="card  bg-slate-900 h-96 rounded-lg border border-slate-700" />
 		<div class="card  bg-slate-900 h-96 rounded-lg border border-slate-700" />
 	</aside>

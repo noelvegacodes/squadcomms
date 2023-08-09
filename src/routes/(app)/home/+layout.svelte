@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Search } from 'lucide-svelte';
-	let searchInput: HTMLInputElement;
+	import Search from '$lib/components/Search.svelte';
 </script>
 
 <!-- <svelte:window on:keydown={(e) => {
@@ -34,7 +33,7 @@
 			</a>
 		</header>
 
-		<main>
+		<main class="divide-y divide-slate-700">
 			<slot />
 		</main>
 	</div>
@@ -42,10 +41,11 @@
 	<!-- Extra Content -->
 	<aside class="px-4 py-4 ">
 		<!-- TODO: make search component -->
-		<div class="search hidden  items-center gap-2 px-4 py-2 border-slate-700 bg-slate-800 rounded-full">
+		<!-- <div class="search hidden  items-center gap-2 px-4 py-2 border-slate-700 bg-slate-800 rounded-full">
 			<Search size={16} class="text-slate-300" />
 			<input type="text" placeholder="Search Buildstory" bind:this={searchInput}/>
-		</div>
+		</div> -->
+		<Search />
 
 		<div class="card  bg-slate-900 h-96 rounded-lg border border-slate-700" />
 		<div class="card  bg-slate-900 h-96 rounded-lg border border-slate-700" />

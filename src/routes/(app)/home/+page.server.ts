@@ -5,6 +5,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
 import { superValidate } from 'sveltekit-superforms/server';
 import { z } from 'zod';
+import { posts as timeline } from '$lib/stores/mock/posts';
 
 const postFormSchema = z.object({
 	text: z.string().max(10)
@@ -14,7 +15,7 @@ export const load = async ({ locals }) => {
 	const session = locals.session;
 	if (!session) throw redirect(302, '/signin');
 	const form = await superValidate(postFormSchema);
-	return { form };
+	return { form, user: session.user, timeline };
 };
 
 export const actions = {
